@@ -26,7 +26,7 @@ public class LevelCreator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(player.transform.position.x > ((chunkIndex-2) * widthCube * chunkSize)){
+		if(player.transform.position.x > (chunkIndex-2) * widthCube * chunkSize){
 			CreateChunk(false);
 		}
 	}
@@ -34,42 +34,47 @@ public class LevelCreator : MonoBehaviour {
 	void CreateChunk(bool start){
 		//Dechunk last chunk
 		if(!start){
-			Dechucker();
+			Dechuncker();
 		}
 
-		//Create the floor
-    	GameObject[] auxChunk = new GameObject[chunkSize+10];
-		for (int i = 0; i < chunkSize; i++){
-			GameObject aux = Instantiate(block);
-			// aux.transform.localScale = new Vector3(1, 1, 1);
-			// aux.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(widthCube / 2  + widthCube /2 * i, widthCube / 2, 11));
-			float pozo = Random.value;
-			if(pozo > 0.95 && i < chunkSize + 10){
-				i += (int) Mathf.Round(((pozo-0.9f) * 100)) + 3;
-			}
-			aux.transform.position = mapBeggining;
-			aux.transform.position = new Vector3(
-			aux.transform.position.x + (widthCube / 2) + (widthCube * i) + (chunkSize * chunkIndex * widthCube),
-			aux.transform.position.y + (widthCube / 2),
-			aux.transform.position.z
-			);
-			auxChunk[i] = aux;
-  		}	
-		chunks.Enqueue(auxChunk);
+		GameObject[] chunk = floorChunk(0.95f, 10);
+		chunks.Enqueue(chunk);
 
 		chunkIndex += 1;
 	}
 
-	void Dechucker(){
-		print(chunks);
+	void Dechuncker(){
 		GameObject[] toDechunk = chunks.Dequeue();
 		for (int i = 0; i < toDechunk.Length; i++){
 			Destroy(toDechunk[i]);
 		}
 	}
+
+	GameObject[] floorChunk(float holeThreshhold, int holeMaxSize) {
+		GameObject[] auxChunk = new GameObject[chunkSize+10];
+		for (int i = 0; i < chunkSize; i++){
+			GameObject aux = Instantiate(block);
+			aux.name = "tile" + i;
+			aux.transform.SetParent(gameObject.transform);
+
+			float holeProb = Random.value;
+			if(holeProb > holeThreshhold && i < chunkSize + holeMaxSize) {
+				i += Random.Range(1, holeMaxSize);  //(int) Mathf.Round((holeProb-0.9f) * 100 + 3);
+			}
+			aux.transform.position = mapBeggining;
+			aux.transform.position = new Vector3(
+				aux.transform.position.x + widthCube / 2 + widthCube * i + chunkSize * chunkIndex * widthCube,
+				aux.transform.position.y + widthCube / 2,
+				aux.transform.position.z
+			);
+			auxChunk[i] = aux;
+		}
+
+		return auxChunk;
+	}
+
+	GameObject[] holedChunk(float holeProb) {
+		return null;
+	}
 }
 
-
-public class Chunk {
-
-}
