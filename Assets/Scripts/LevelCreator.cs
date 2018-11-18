@@ -58,7 +58,7 @@ public class LevelCreator : MonoBehaviour {
 		}
 	}
 
-	GameObject[] floorChunk(float holeThreshhold, int holeMaxSize) {
+	GameObject[] floorChunk(float holeThreshold, int holeMaxSize) {
 		
 		GameObject[] auxChunk = new GameObject[chunkSize];
 		for (int i = 0; i < chunkSize; i++){
@@ -67,7 +67,7 @@ public class LevelCreator : MonoBehaviour {
 			aux.transform.SetParent(gameObject.transform);
 
 			float holeProb = Random.value;
-			if(holeProb > holeThreshhold && i + holeMaxSize < chunkSize) {
+			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize) {
 				i += Random.Range(1, holeMaxSize);
 			}
 			aux.transform.position = mapBeggining;
@@ -128,6 +128,6 @@ public class LevelCreator : MonoBehaviour {
 		}
 		return auxChunk;
 	}
-	
+
 }
 

@@ -5,6 +5,8 @@ using UnityEngine;
 public class FollowPlayer : MonoBehaviour {
 
 	private GameObject player;
+
+	public float y;
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player");
@@ -14,7 +16,7 @@ public class FollowPlayer : MonoBehaviour {
 	void Update () {
 		transform.position = new Vector3(
 			(player.transform.position.x>0)?player.transform.position.x:0,
-			0,
+			y,
 			-10
 		);
 	}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour {
 	Rigidbody2D rigid;
@@ -42,11 +43,17 @@ public class PlayerScript : MonoBehaviour {
 		animator.SetFloat("SpeedY", rigid.velocity.y);
 	}
 
-	void OnCollisionEnter2D(Collision2D coll){
-// RaycastHit2D hit = Physics2D.Raycast(new Vector2(coll.bounds.min.x, coll.bounds.min.y), -Vector2.up, 0.01f);
-        if (coll.gameObject.tag == "Floor"){
-            animator.SetBool("Jump", false);
-						grounded = true;
-        }
+	void OnCollisionEnter2D(Collision2D coll) {
+		// RaycastHit2D hit = Physics2D.Raycast(new Vector2(coll.bounds.min.x, coll.bounds.min.y), -Vector2.up, 0.01f);
+		if (coll.gameObject.CompareTag("Floor")) {
+			animator.SetBool("Jump", false);
+			grounded = true;
+		}
+	}
+
+	private void OnTriggerEnter2D(Collider2D other) {
+		if (other.gameObject.name.Equals("DeathTrigger")) {
+			Application.LoadLevel(Application.loadedLevel);
+		}
 	}
 }
