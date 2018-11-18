@@ -152,29 +152,9 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 1163833789970892, guid: 1d139f737cf5db44b8f97bd7c8b7446f, type: 2}
-      propertyPath: m_Name
-      value: LevelManager
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1d139f737cf5db44b8f97bd7c8b7446f, type: 2}
   m_IsPrefabAsset: 0
---- !u!1 &444925201 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1758354873072138, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5,
-    type: 2}
-  m_PrefabInternal: {fileID: 1000632554}
---- !u!114 &444925207
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 444925201}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25da87a99297aab4e900d68667431dc1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1000632554
 Prefab:
   m_ObjectHideFlags: 0
@@ -218,11 +198,6 @@ Prefab:
       propertyPath: m_Name
       value: Carlenz
       objectReference: {fileID: 0}
-    - target: {fileID: 95959857330541618, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5,
-        type: 2}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 06300ff5d9d43c94abdb354e8e4b6ea1, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5, type: 2}
   m_IsPrefabAsset: 0
