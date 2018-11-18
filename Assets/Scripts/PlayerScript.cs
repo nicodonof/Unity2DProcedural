@@ -18,17 +18,22 @@ public class PlayerScript : MonoBehaviour {
 	void Update () {
 		float x = rigid.velocity.x;
     float y = rigid.velocity.y;
-		rigid.velocity = 
-			new Vector2(Mathf.Clamp(Input.GetAxis("Horizontal") + x + Time.deltaTime, -7,7),
-			y
-			);
+		if(Input.GetKey("right")){
+			rigid.velocity = 
+				new Vector2(Mathf.Clamp(x + Time.deltaTime + 1, -7,7),
+				y
+				);
+		} else if(Input.GetKey("left")){
+			rigid.velocity = 
+				new Vector2(Mathf.Clamp(x - Time.deltaTime - 1, -7,7),
+				y
+				);
+		}
 		if(Input.GetButtonDown("Jump") && rigid.velocity.y == 0){
 			rigid.AddForce(new Vector2(0,400));
 		}
 
 		animator.SetFloat("Speed", rigid.velocity.x);
-		print(rigid.velocity.y);
 		animator.SetFloat("SpeedY", rigid.velocity.y);
-		// animator.speed = rigid.velocity.x / 5;
 	}
 }

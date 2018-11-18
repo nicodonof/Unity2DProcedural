@@ -9,7 +9,7 @@ public class LevelCreator : MonoBehaviour {
 	Vector3 mapBeggining;
 	public GameObject block;
 	public Queue<GameObject[]> chunks;
-	GameObject player;
+	public GameObject player;
 	// Use this for initialization
 	void Start () {
 		// float widthGrid = Mathf.Round(Camera.main.pixelWidth/grid_row);
@@ -21,7 +21,7 @@ public class LevelCreator : MonoBehaviour {
 		CreateChunk(true);
 		CreateChunk(true);
 		CreateChunk(true);
-		player = GameObject.FindGameObjectWithTag("Player");
+		// player = GameObject.FindGameObjectWithTag("Player");
 	}
 	
 	// Update is called once per frame
@@ -38,14 +38,14 @@ public class LevelCreator : MonoBehaviour {
 		}
 
 		//Create the floor
-    	GameObject[] auxChunk = new GameObject[chunkSize];
+    	GameObject[] auxChunk = new GameObject[chunkSize+10];
 		for (int i = 0; i < chunkSize; i++){
 			GameObject aux = Instantiate(block);
 			// aux.transform.localScale = new Vector3(1, 1, 1);
 			// aux.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(widthCube / 2  + widthCube /2 * i, widthCube / 2, 11));
 			float pozo = Random.value;
-			if(pozo > 0.95 && i < chunkSize + 6){
-				i += (int) Mathf.Round(((pozo-0.9f) * 100) + 3);
+			if(pozo > 0.95 && i < chunkSize + 10){
+				i += (int) Mathf.Round(((pozo-0.9f) * 100)) + 3;
 			}
 			aux.transform.position = mapBeggining;
 			aux.transform.position = new Vector3(
@@ -61,6 +61,7 @@ public class LevelCreator : MonoBehaviour {
 	}
 
 	void Dechucker(){
+		print(chunks);
 		GameObject[] toDechunk = chunks.Dequeue();
 		for (int i = 0; i < toDechunk.Length; i++){
 			Destroy(toDechunk[i]);
