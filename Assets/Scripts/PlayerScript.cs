@@ -11,6 +11,7 @@ public class PlayerScript : MonoBehaviour {
     coll = GetComponent<BoxCollider2D>();
 		animator = GetComponent<Animator>();
 		grounded = false;
+		// animator.recorderMode = AnimatorRecorderMode.Playback;
 	}
 	
 	// Update is called once per frame
@@ -19,14 +20,20 @@ public class PlayerScript : MonoBehaviour {
     float y = rigid.velocity.y;
 		if(Input.GetKey("right")){
 			rigid.velocity = new Vector2(
-					Mathf.Clamp(x + Time.deltaTime + 1, -7,7),
+					Mathf.Clamp(x + Time.deltaTime + 0.5f, -8,8),
 					y
 			);
+			// print(rigid.velocity.x / 8);
+			animator.speed = rigid.velocity.x / 8;
+			transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 		} else if(Input.GetKey("left")){
 			rigid.velocity = new Vector2(
-				Mathf.Clamp(x - Time.deltaTime - 1, -7,7),
+				Mathf.Clamp(x - Time.deltaTime - 0.5f, -8,8),
 				y
 			);
+			animator.speed = rigid.velocity.x / 8;
+			// print(rigid.velocity.x / 8);
+			transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
 		}
 		if(Input.GetButtonDown("Jump") && grounded){
 			rigid.AddForce(new Vector2(0,700));
@@ -40,11 +47,10 @@ public class PlayerScript : MonoBehaviour {
 		animator.SetFloat("SpeedY", rigid.velocity.y);
 	}
 
-	void OnCollisionEnter2D(Collision2D coll) {
-		// RaycastHit2D hit = Physics2D.Raycast(new Vector2(coll.bounds.min.x, coll.bounds.min.y), -Vector2.up, 0.01f);
-		if (coll.gameObject.CompareTag("Floor")) {
-			animator.SetBool("Jump", false);
-			grounded = true;
+	void OnCollisionEnter2D(Collision2D collision){
+		if (collision.gameObject.tag == "Floor" && collision.otherCollider.bounds.min.y <= coll.bounds.max.y){
+				animator.SetBool("Jump", false);
+				grounded = true;
 		}
 	}
 
