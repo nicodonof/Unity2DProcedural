@@ -43,6 +43,10 @@ public class LevelCreator : MonoBehaviour {
 			GameObject aux = Instantiate(block);
 			// aux.transform.localScale = new Vector3(1, 1, 1);
 			// aux.transform.position = Camera.main.ScreenToWorldPoint(new Vector3(widthCube / 2  + widthCube /2 * i, widthCube / 2, 11));
+			float pozo = Random.value;
+			if(pozo > 0.95 && i < chunkSize + 6){
+				i += (int) Mathf.Round(((pozo-0.9f) * 100) + 3);
+			}
 			aux.transform.position = mapBeggining;
 			aux.transform.position = new Vector3(
 			aux.transform.position.x + (widthCube / 2) + (widthCube * i) + (chunkSize * chunkIndex * widthCube),
