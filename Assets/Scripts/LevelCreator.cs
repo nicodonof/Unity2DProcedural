@@ -26,7 +26,7 @@ public class LevelCreator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(player.transform.position.x > (chonkIndex - 30) * widthCube){
+		if(player.transform.position.x > (chonkIndex - 50) * widthCube){
 			CreateChunk(false);
 		}
 	}
