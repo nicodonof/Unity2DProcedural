@@ -25,7 +25,6 @@ public class LevelCreator : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		print(Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 11)));
 		// print(player.transform.position.x);
 		if(player.transform.position.x > ((chunkIndex-2) * widthCube * chunkSize)){
 			CreateChunk(false);

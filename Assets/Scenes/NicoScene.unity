@@ -164,11 +164,11 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4555196429414654, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -5.02
+      value: -5.64
       objectReference: {fileID: 0}
     - target: {fileID: 4555196429414654, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 2.46
+      value: -0.32
       objectReference: {fileID: 0}
     - target: {fileID: 4555196429414654, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5, type: 2}
       propertyPath: m_LocalPosition.z
@@ -198,11 +198,6 @@ Prefab:
       propertyPath: m_Name
       value: Carlenz
       objectReference: {fileID: 0}
-    - target: {fileID: 50726943854777492, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5,
-        type: 2}
-      propertyPath: m_Material
-      value: 
-      objectReference: {fileID: 6200000, guid: d9ff2a3d67f6a1149ae5313603d83153, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5, type: 2}
   m_IsPrefabAsset: 0

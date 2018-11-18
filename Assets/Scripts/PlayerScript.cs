@@ -5,10 +5,12 @@ using UnityEngine;
 public class PlayerScript : MonoBehaviour {
 	Rigidbody2D rigid;
   BoxCollider2D coll;
+	Animator animator;
 	// Use this for initialization
 	void Start () {
     rigid = GetComponent<Rigidbody2D>();
     coll = GetComponent<BoxCollider2D>();
+		animator = GetComponent<Animator>();
 		
 	}
 	
@@ -23,5 +25,10 @@ public class PlayerScript : MonoBehaviour {
 		if(Input.GetButtonDown("Jump") && rigid.velocity.y == 0){
 			rigid.AddForce(new Vector2(0,400));
 		}
+
+		animator.SetFloat("Speed", rigid.velocity.x);
+		print(rigid.velocity.y);
+		animator.SetFloat("SpeedY", rigid.velocity.y);
+		// animator.speed = rigid.velocity.x / 5;
 	}
 }
