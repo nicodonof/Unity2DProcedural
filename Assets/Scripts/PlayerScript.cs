@@ -17,7 +17,7 @@ public class PlayerScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		float x = rigid.velocity.x;
 		float y = rigid.velocity.y;
 		highscore = (int) ((transform.position.x  + 8.67) * 10);
@@ -46,7 +46,7 @@ public class PlayerScript : MonoBehaviour {
 			rigid.AddForce(new Vector2(0,700));
 			animator.SetBool("Jump", true);
 			grounded = false;
-			// print("Jumping");
+			print("Degrounded");
 		}
 		// print();
 		

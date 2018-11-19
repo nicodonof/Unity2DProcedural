@@ -10,6 +10,8 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject block;
 	public GameObject left;
 	public GameObject right;
+	public GameObject plat_middle;
+	public GameObject plat_left;
 	public Queue<GameObject[]> chunks;
 	public GameObject player;
 
@@ -46,7 +48,9 @@ public class LevelCreator : MonoBehaviour {
 		//hacer basado en dificultad
 		float rand = Random.value;
 		GameObject[] chunk;
-		if (rand > 0.5f) {
+		if(chonkIndex < 2){
+			chunk = simpleChunk();
+		}else if (rand > 0.5f) {
 			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));			
 		} else {
 			chunk = platformChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
@@ -54,13 +58,6 @@ public class LevelCreator : MonoBehaviour {
 
 		chunks.Enqueue(chunk);
 		chonkIndex += chunk.Length;
-	}
-
-	void Dechuncker() {
-		GameObject[] toDechunk = chunks.Dequeue();
-		for (int i = 0; i < toDechunk.Length; i++){
-			Destroy(toDechunk[i]);
-		}
 	}
 
 	GameObject[] floorChunk(float holeThreshold, int holeMaxSize) {
@@ -95,25 +92,28 @@ public class LevelCreator : MonoBehaviour {
 		return auxChunk;
 	}
 
-	GameObject[] holedChunk(int size) {
-		
-		GameObject[] auxChunk = new GameObject[size];
-		for (int i = 0; i < size; i += 2) {
-			GameObject aux = Instantiate(block);
+    GameObject[] simpleChunk(){
+        GameObject[] auxChunk = new GameObject[chunkSize];
+        for (int i = 0; i < chunkSize; i++){
+            GameObject aux;
+        	aux = Instantiate(block);
 			aux.name = "tile" + i;
-			aux.transform.SetParent(gameObject.transform);
+		
+    	    aux.transform.SetParent(gameObject.transform);
+        
 
-			aux.transform.position = mapBeggining;
-			aux.transform.position = new Vector3(
-				aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube,
-				aux.transform.position.y + widthCube / 2,
-				aux.transform.position.z
-			);
-			auxChunk[i] = aux;
-		}
-		return auxChunk;
+            aux.transform.position = mapBeggining;
+            aux.transform.position = new Vector3(
+                aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube,
+                aux.transform.position.y + widthCube / 2,
+                aux.transform.position.z
+            );
+            auxChunk[i] = aux;
+        }
+
+        return auxChunk;
 	}
-	
+
 	GameObject[] platformChunk(float platThreshold, int platMaxSize) {
 		int platSize = 0;
 		if (platMaxSize < 1) {
@@ -147,6 +147,34 @@ public class LevelCreator : MonoBehaviour {
 				i+= Random.Range(1, platMaxSize);
 			}
 			platSize--;
+		}
+		return auxChunk;
+	}
+
+
+    void Dechuncker(){
+        GameObject[] toDechunk = chunks.Dequeue();
+        for (int i = 0; i < toDechunk.Length; i++)
+        {
+            Destroy(toDechunk[i]);
+        }
+    }
+
+	GameObject[] holedChunk(int size) {
+		
+		GameObject[] auxChunk = new GameObject[size];
+		for (int i = 0; i < size; i += 2) {
+			GameObject aux = Instantiate(block);
+			aux.name = "tile" + i;
+			aux.transform.SetParent(gameObject.transform);
+
+			aux.transform.position = mapBeggining;
+			aux.transform.position = new Vector3(
+				aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube,
+				aux.transform.position.y + widthCube / 2,
+				aux.transform.position.z
+			);
+			auxChunk[i] = aux;
 		}
 		return auxChunk;
 	}
