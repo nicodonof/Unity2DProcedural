@@ -21,23 +21,27 @@ public class PlayerScript : MonoBehaviour {
 		float x = rigid.velocity.x;
 		float y = rigid.velocity.y;
 		highscore = (int) ((transform.position.x  + 8.67) * 10);
-		if(Input.GetKey("right")){
-			rigid.velocity = new Vector2(
-					Mathf.Clamp(x + Time.deltaTime + 0.5f, -8,8),
-					y
-			);
+		bool right = Input.GetKey("right");
+		bool left = Input.GetKey("left");
+		if(right || left){
+			if(grounded){
+				animator.speed = Mathf.Abs(rigid.velocity.x / 8);
+				rigid.velocity = new Vector2(
+						Mathf.Clamp(x + (Time.deltaTime + 0.7f) * (right?1:-1), -8,8),
+						y
+				);
+			} else {
+				// if((right && rigid.velocity.x <= 0) || (left && rigid.velocity.x >= 0)){
+					rigid.velocity = new Vector2(
+							Mathf.Clamp(x + (Time.deltaTime + 0.2f) * (right?1:-1), -8,8),
+							y
+					);
+				// }
+			}
 			// print(rigid.velocity.x / 8);
-			animator.speed = Mathf.Abs(rigid.velocity.x / 8);
-			transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
-		} else if(Input.GetKey("left")){
-			rigid.velocity = new Vector2(
-				Mathf.Clamp(x - Time.deltaTime - 0.5f, -8,8),
-				y
-			);
-			animator.speed = Mathf.Abs(rigid.velocity.x / 8);
-			// print(rigid.velocity.x / 8);
-			transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
-		}
+			transform.localScale = new Vector3(right?1:-1, transform.localScale.y, transform.localScale.z);
+		} 
+
 		if(Input.GetButtonDown("Jump") && grounded){
 			rigid.AddForce(new Vector2(0,700));
 			animator.SetBool("Jump", true);
