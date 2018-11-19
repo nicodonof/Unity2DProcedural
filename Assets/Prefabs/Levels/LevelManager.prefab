@@ -52,5 +52,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunkSize: 50
-  block: {fileID: 1141854501906202, guid: 3fb2f8372b87ca44fab91644009e1149, type: 2}
+  block: {fileID: 1729683663044672, guid: 48b54926f98b6074a912a05724c828af, type: 2}
+  left: {fileID: 1863101600738782, guid: bf055daa5550a384e8922d3d421ca072, type: 2}
+  right: {fileID: 1620041190640924, guid: eaa72fc3612e24e46a61a01044455192, type: 2}
   player: {fileID: 0}

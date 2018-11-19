@@ -8,6 +8,8 @@ public class LevelCreator : MonoBehaviour {
 	int chonkIndex;
 	Vector3 mapBeggining;
 	public GameObject block;
+	public GameObject left;
+	public GameObject right;
 	public Queue<GameObject[]> chunks;
 	public GameObject player;
 
@@ -18,7 +20,8 @@ public class LevelCreator : MonoBehaviour {
 		chonkIndex = 0;
 		mapBeggining = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 11));
 		// block.transform.localScale = new Vector3(0.5f,0.5f,1);
-		widthCube = block.GetComponent<BoxCollider2D>().size.x / 2;
+		// widthCube = block.GetComponent<BoxCollider2D>().size.x / 2; //
+		widthCube = 1.27f / 2;
 		chunks = new Queue<GameObject[]>();
 		ps = player.GetComponent<PlayerScript>();
 		CreateChunk(true);
@@ -67,15 +70,20 @@ public class LevelCreator : MonoBehaviour {
 		}
 		GameObject[] auxChunk = new GameObject[chunkSize];
 		for (int i = 0; i < chunkSize; i++){
-			GameObject aux = Instantiate(block);
-			aux.name = "tile" + i;
-			aux.transform.SetParent(gameObject.transform);
-			aux.GetComponent<BoxCollider2D>().size += new Vector2(0.05f, 0.05f);
-
-			float holeProb = Random.value;
-			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize) {
+			GameObject aux;
+            float holeProb = Random.value;
+			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize && i > 0) {
+				aux = Instantiate(left);
+				aux.name = "tile" + i + "_left";
 				i += Random.Range(1, holeMaxSize);
+			} else {
+				aux = Instantiate(block);
+				aux.name = "tile" + i;
 			}
+			aux.transform.SetParent(gameObject.transform);
+			// aux.GetComponent<BoxCollider2D>().size += new Vector2(0.05f, 0.05f);
+
+			
 			aux.transform.position = mapBeggining;
 			aux.transform.position = new Vector3(
 				aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube,
