@@ -26,16 +26,14 @@ public class PlayerScript : MonoBehaviour {
 					Mathf.Clamp(x + Time.deltaTime + 0.5f, -8,8),
 					y
 			);
-			// print(rigid.velocity.x / 8);
-			animator.speed = rigid.velocity.x / 8;
+			animator.speed = Mathf.Abs(rigid.velocity.x / 8);
 			transform.localScale = new Vector3(1, transform.localScale.y, transform.localScale.z);
 		} else if(Input.GetKey("left")){
 			rigid.velocity = new Vector2(
 				Mathf.Clamp(x - Time.deltaTime - 0.5f, -8,8),
 				y
 			);
-			animator.speed = rigid.velocity.x / 8;
-			// print(rigid.velocity.x / 8);
+			animator.speed = Mathf.Abs(rigid.velocity.x / 8);
 			transform.localScale = new Vector3(-1, transform.localScale.y, transform.localScale.z);
 		}
 		if(Input.GetButtonDown("Jump") && grounded){
@@ -43,15 +41,16 @@ public class PlayerScript : MonoBehaviour {
 			animator.SetBool("Jump", true);
 			grounded = false;
 		}
-		// print();
 		
-
 		animator.SetFloat("Speed", rigid.velocity.x);
 		animator.SetFloat("SpeedY", rigid.velocity.y);
 	}
 
 	void OnCollisionEnter2D(Collision2D collision){
-		if (collision.gameObject.tag == "Floor" && collision.otherCollider.bounds.min.y <= coll.bounds.max.y){
+		// print(collision.otherCollider.gameObject.name + ": " + (collision.otherCollider.bounds.max.y));
+		// print(collision.collider.gameObject.name + "- " + (coll.bounds.min.y));
+		// print(coll.bounds.min.y + " >= " + collision.otherCollider.bounds.max.y);
+		if (collision.gameObject.tag == "Floor" && collision.otherCollider.bounds.min.y >= collision.collider.bounds.max.y ){
 				animator.SetBool("Jump", false);
 				grounded = true;
 		}
