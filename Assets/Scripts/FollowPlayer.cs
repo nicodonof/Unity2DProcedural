@@ -12,14 +12,15 @@ public class FollowPlayer : MonoBehaviour {
 	void Start () {
 		player = GameObject.FindGameObjectWithTag("Player");
 		offset = gameObject.transform.position.x - player.transform.position.x;
+        transform.position = new Vector3(
+            player.transform.position.x + offset,
+            y,
+            -10
+        );
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		transform.position = new Vector3(
-			player.transform.position.x + offset,
-			y,
-			-10
-		);
+		
 	}
 }
