@@ -45,7 +45,6 @@ public class LevelCreator : MonoBehaviour {
 		
 		//hacer basado en dificultad
 		float rand = Random.value;
-
 		GameObject[] chunk;
 		if (rand > 0.5f) {
 			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));			
