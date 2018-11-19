@@ -133,13 +133,12 @@ public class LevelCreator : MonoBehaviour {
 				y,
 				aux.transform.position.z
 			);
-			
-			if (platSize == 1) {
-				i+= Random.Range(1, platMaxSize);
-			}
 
 			platSize--;
 			auxChunk[i] = aux;
+			if (platSize == 1) {
+				i+= Random.Range(1, platMaxSize);
+			}
 		}
 		return auxChunk;
 	}
