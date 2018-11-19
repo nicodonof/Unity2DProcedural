@@ -117,7 +117,7 @@ public class LevelCreator : MonoBehaviour {
 			aux.name = "tile" + i;
 			aux.transform.SetParent(gameObject.transform);
 			float holeProb = Random.value;
-			if(holeProb > platThreshold && i + platMaxSize< chunkSize) {
+			if(holeProb > platThreshold && i + platMaxSize + 1 < chunkSize) {
 				platSize = Random.Range(1, platMaxSize);
 				i++;
 			}
@@ -134,11 +134,11 @@ public class LevelCreator : MonoBehaviour {
 				aux.transform.position.z
 			);
 
-			platSize--;
 			auxChunk[i] = aux;
 			if (platSize == 1) {
 				i+= Random.Range(1, platMaxSize);
 			}
+			platSize--;
 		}
 		return auxChunk;
 	}
