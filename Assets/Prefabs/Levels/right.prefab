@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 68840557359998786}
   - component: {fileID: 68775905697016306}
   - component: {fileID: 68999243178660696}
+  - component: {fileID: 114854677272858488}
   m_Layer: 0
   m_Name: right
   m_TagString: Floor
@@ -38,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1620041190640924}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.026, y: -3.287, z: 0}
+  m_LocalPosition: {x: 13.198778, y: -4.6825, z: 1}
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -115,6 +116,18 @@ EdgeCollider2D:
   m_Points:
   - {x: 0.67, y: 0.65}
   - {x: 0.67, y: -0.65}
+--- !u!114 &114854677272858488
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1620041190640924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c13f5c76dcf8b24f96130ede6a09026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0.15
 --- !u!212 &212019092525570630
 SpriteRenderer:
   m_ObjectHideFlags: 1
