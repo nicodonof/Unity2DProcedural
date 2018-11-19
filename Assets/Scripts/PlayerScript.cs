@@ -2,22 +2,25 @@
 
 public class PlayerScript : MonoBehaviour {
 	Rigidbody2D rigid;
-  BoxCollider2D coll;
+	BoxCollider2D coll;
 	Animator animator;
+	public int highscore;
 	bool grounded;
 	// Use this for initialization
 	void Start () {
-    rigid = GetComponent<Rigidbody2D>();
-    coll = GetComponent<BoxCollider2D>();
+		rigid = GetComponent<Rigidbody2D>();
+		coll = GetComponent<BoxCollider2D>();
 		animator = GetComponent<Animator>();
 		grounded = false;
 		// animator.recorderMode = AnimatorRecorderMode.Playback;
+		highscore = 0;
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
 		float x = rigid.velocity.x;
-    float y = rigid.velocity.y;
+		float y = rigid.velocity.y;
+		highscore = (int) ((transform.position.x  + 8.67) * 10);
 		if(Input.GetKey("right")){
 			rigid.velocity = new Vector2(
 					Mathf.Clamp(x + Time.deltaTime + 0.5f, -8,8),

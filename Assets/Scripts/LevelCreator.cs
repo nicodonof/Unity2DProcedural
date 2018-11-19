@@ -10,6 +10,8 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject block;
 	public Queue<GameObject[]> chunks;
 	public GameObject player;
+
+	private PlayerScript ps;
 	// Use this for initialization
 	void Start () {
 		// float widthGrid = Mathf.Round(Camera.main.pixelWidth/grid_row);
@@ -18,6 +20,7 @@ public class LevelCreator : MonoBehaviour {
 		// block.transform.localScale = new Vector3(0.5f,0.5f,1);
 		widthCube = block.GetComponent<BoxCollider2D>().size.x / 2;
 		chunks = new Queue<GameObject[]>();
+		ps = player.GetComponent<PlayerScript>();
 		CreateChunk(true);
 		CreateChunk(true);
 		CreateChunk(true);
@@ -42,9 +45,9 @@ public class LevelCreator : MonoBehaviour {
 
 		GameObject[] chunk;
 		if (rand > 0.5f) {
-			chunk = floorChunk(0.9f, 8);			
+			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));			
 		} else {
-			chunk = platformChunk(0.9f, 8);
+			chunk = platformChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
 		}
 
 		chunks.Enqueue(chunk);
@@ -59,7 +62,9 @@ public class LevelCreator : MonoBehaviour {
 	}
 
 	GameObject[] floorChunk(float holeThreshold, int holeMaxSize) {
-		
+		if (holeMaxSize < 1) {
+			holeMaxSize = 1;
+		}
 		GameObject[] auxChunk = new GameObject[chunkSize];
 		for (int i = 0; i < chunkSize; i++){
 			GameObject aux = Instantiate(block);
@@ -103,6 +108,9 @@ public class LevelCreator : MonoBehaviour {
 	
 	GameObject[] platformChunk(float platThreshold, int platMaxSize) {
 		int platSize = 0;
+		if (platMaxSize < 1) {
+			platMaxSize = 1;
+		}
 		GameObject[] auxChunk = new GameObject[chunkSize];
 		for (int i = 0; i < chunkSize; i++) {
 			GameObject aux = Instantiate(block);
@@ -111,11 +119,12 @@ public class LevelCreator : MonoBehaviour {
 			float holeProb = Random.value;
 			if(holeProb > platThreshold && i + platMaxSize< chunkSize) {
 				platSize = Random.Range(1, platMaxSize);
+				i++;
 			}
 
 			aux.transform.position = mapBeggining;
 			float y = aux.transform.position.y + widthCube / 2;
-			if (platSize-- > 0) {
+			if (platSize > 0) {
 				y += widthCube * 8 / 2;
 			}
 
@@ -124,6 +133,12 @@ public class LevelCreator : MonoBehaviour {
 				y,
 				aux.transform.position.z
 			);
+			
+			if (platSize == 1) {
+				i+= Random.Range(1, platMaxSize);
+			}
+
+			platSize--;
 			auxChunk[i] = aux;
 		}
 		return auxChunk;
