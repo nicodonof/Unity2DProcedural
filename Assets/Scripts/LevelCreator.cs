@@ -70,6 +70,7 @@ public class LevelCreator : MonoBehaviour {
 			GameObject aux = Instantiate(block);
 			aux.name = "tile" + i;
 			aux.transform.SetParent(gameObject.transform);
+			aux.GetComponent<BoxCollider2D>().size += new Vector2(0.05f, 0.05f);
 
 			float holeProb = Random.value;
 			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize) {
