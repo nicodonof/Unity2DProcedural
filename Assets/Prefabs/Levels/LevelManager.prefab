@@ -55,7 +55,10 @@ MonoBehaviour:
   block: {fileID: 1729683663044672, guid: 48b54926f98b6074a912a05724c828af, type: 2}
   left: {fileID: 1863101600738782, guid: bf055daa5550a384e8922d3d421ca072, type: 2}
   right: {fileID: 1620041190640924, guid: eaa72fc3612e24e46a61a01044455192, type: 2}
+  floor_one: {fileID: 1013861145917188, guid: 4b8d5d46d42e94d478f6ad3cc05eee1c, type: 2}
   plat_middle: {fileID: 1445997614204790, guid: 7ff5a63b7f8ceb0408fb634d2c924a8f,
     type: 2}
-  plat_left: {fileID: 0}
+  plat_left: {fileID: 1312874714048172, guid: 8258d21236f057c48b2675514045190b, type: 2}
+  plat_right: {fileID: 1419760887424198, guid: 4239e6d8b14b6014cb20bb4eba8575dc, type: 2}
+  plat_one: {fileID: 1223621686399952, guid: 764fd6488ca70b24c8f3cca79c561c2f, type: 2}
   player: {fileID: 0}

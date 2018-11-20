@@ -44,7 +44,6 @@ public class PlayerScript : MonoBehaviour {
 			// print(rigid.velocity.x / 8);
 			transform.localScale = new Vector3(right?1:-1, transform.localScale.y, transform.localScale.z);
 		} 
-		
 		if(Input.GetButton("Jump") ){
 			if(Input.GetButtonDown("Jump") && grounded){
 				animator.SetBool("Jump", true);

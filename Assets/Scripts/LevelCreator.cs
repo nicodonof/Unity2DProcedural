@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class LevelCreator : MonoBehaviour {
@@ -10,8 +11,11 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject block;
 	public GameObject left;
 	public GameObject right;
+	public GameObject floor_one;
 	public GameObject plat_middle;
 	public GameObject plat_left;
+	public GameObject plat_right;
+	public GameObject plat_one;
 	public Queue<GameObject[]> chunks;
 	public GameObject player;
 
@@ -20,6 +24,7 @@ public class LevelCreator : MonoBehaviour {
 	private PlayerScript ps;
 	// Use this for initialization
 	void Start () {
+//		left = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Levels/left.prefab");
 		// float widthGrid = Mathf.Round(Camera.main.pixelWidth/grid_row);
 		chonkIndex = 0;
 		mapBeggining = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 11));
@@ -37,7 +42,6 @@ public class LevelCreator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) ){
-			// print(chonkIndex - (chunkSize * 2) );
 			CreateChunk(false);
 		}
 	}
@@ -72,12 +76,15 @@ public class LevelCreator : MonoBehaviour {
 			
             
 			float holeProb = Random.value;
-			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize && i > 0) {
-				GameObject auxLeft = Instantiate(right);
-				GameObject auxRight = Instantiate(left);
+			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize && i > 1) {
+				if (auxChunk[i - 2] == null) {
+					auxChunk[i - 1].GetComponent<SpriteRenderer>().sprite =
+						floor_one.GetComponent<SpriteRenderer>().sprite;
+				} else {
+					setBlock(Instantiate(right), i, auxChunk);	
+				}
 				int holeSize = Random.Range(2, holeMaxSize);
-				setBlock(auxLeft, i, auxChunk);
-				setBlock(auxRight, i + holeSize,auxChunk);
+				setBlock(Instantiate(left), i + holeSize,auxChunk);
 				i += holeSize;
 			} else {
 				GameObject aux = Instantiate(block);
@@ -127,23 +134,34 @@ public class LevelCreator : MonoBehaviour {
 		bool puttingPlats = false;
 		int platHeight = 0;
 		for (int i = 0; i < chunkSize; i++) {
-			
 			float holeProb = Random.value;
-			if(holeProb > platThreshold && i + platMaxSize + 2 < chunkSize) {
+			if(!puttingPlats && holeProb > platThreshold && i + platMaxSize + 4 /* para q meta bien los bordes del piso */ < chunkSize && i > 0) {
 				platSize = Random.Range(1, platMaxSize);
+				auxChunk[i - 1].GetComponent<SpriteRenderer>().sprite = right.GetComponent<SpriteRenderer>().sprite;
 				puttingPlats = true;
 				platHeight = Random.Range(4, 8);
 				i++;
+				setBlock(Instantiate(platSize == 1? plat_one : plat_left), i++, auxChunk, platHeight);
+				platSize--;
+				if (platSize == 0) {
+					puttingPlats = false;
+					i++;
+					setBlock(Instantiate(left), i++, auxChunk);
+				}
 			}
 			
 			if(puttingPlats){
 				GameObject aux = Instantiate(plat_middle);
 				setBlock(aux, i, auxChunk, platHeight);
-				if(--platSize == 0){
+				if(platSize == 1){
+					setBlock(Instantiate(plat_right), ++i, auxChunk, platHeight);
 					puttingPlats = false;
 					i++;
+					setBlock(Instantiate(left), ++i, auxChunk);
 				}
-            } else {
+
+				platSize--;
+			} else {
                 GameObject aux = Instantiate(block);
 				setBlock(aux, i, auxChunk);
             }
