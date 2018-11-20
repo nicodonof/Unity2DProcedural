@@ -37,7 +37,7 @@ public class LevelCreator : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) ){
-			print(chonkIndex - (chunkSize * 2) );
+			// print(chonkIndex - (chunkSize * 2) );
 			CreateChunk(false);
 		}
 	}

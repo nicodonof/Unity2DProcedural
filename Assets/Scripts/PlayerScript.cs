@@ -7,6 +7,7 @@ public class PlayerScript : MonoBehaviour {
 	Animator animator;
 	public int highscore;
 	bool grounded;
+	float jumpGas;
 	// Use this for initialization
 	void Start () {
 		rigid = GetComponent<Rigidbody2D>();
@@ -15,6 +16,7 @@ public class PlayerScript : MonoBehaviour {
 		grounded = true;
 		// animator.recorderMode = AnimatorRecorderMode.Playback;
 		highscore = 0;
+		jumpGas = 5;
 	}
 	
 	// Update is called once per frame
@@ -42,12 +44,18 @@ public class PlayerScript : MonoBehaviour {
 			// print(rigid.velocity.x / 8);
 			transform.localScale = new Vector3(right?1:-1, transform.localScale.y, transform.localScale.z);
 		} 
-
-		if(Input.GetButtonDown("Jump") && grounded){
-			rigid.AddForce(new Vector2(0,700));
-			animator.SetBool("Jump", true);
-			grounded = false;
-			print("Degrounded");
+		
+		if(Input.GetButton("Jump") ){
+			if(Input.GetButtonDown("Jump") && grounded){
+				animator.SetBool("Jump", true);
+				grounded = false;
+				rigid.AddForce(new Vector2(0,400));
+			} else {
+				if(rigid.velocity.y > 0 && rigid.velocity.y < 10 && jumpGas > 0){
+					rigid.AddForce(new Vector2(0, (jumpGas * 2 )));
+					jumpGas -= 0.02f;
+				} 
+			}
 		}
 		// print();
 		
@@ -65,6 +73,7 @@ public class PlayerScript : MonoBehaviour {
 			if (collision.otherCollider.bounds.min.y >= collision.collider.bounds.max.y) {
 				grounded = true;
 				rigid.velocity.Set(rigid.velocity.x, 0);
+				jumpGas = 5;
 			} // print("Groundedhog");
 		}
 	}
