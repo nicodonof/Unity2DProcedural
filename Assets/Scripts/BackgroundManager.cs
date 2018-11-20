@@ -26,7 +26,7 @@ public class BackgroundManager : MonoBehaviour {
 		temporaryCackinas = 0;
 		currFloor = new GameObject[2];
 		currClouds = new GameObject[2];
-		currFloor[0] = Instantiate(floorDecor[0]); 
+		currFloor[0] = Instantiate(floorDecor[0]);
 		currFloor[0].transform.SetParent(transform);
 		currFloor[1] = Instantiate(floorDecor[0]);
 		currFloor[1].transform.SetParent(transform);
@@ -37,7 +37,7 @@ public class BackgroundManager : MonoBehaviour {
 
 		startParalax();
 	}
-	
+
 	// Update is called once per frame
 	void FixedUpdate () {
 		if(currFloor[0].transform.position.x < -15){

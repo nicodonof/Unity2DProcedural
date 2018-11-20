@@ -20,7 +20,7 @@ public class LevelCreator : MonoBehaviour {
 	public Queue<GameObject[]> chunks;
 	public GameObject player;
 
-	GameObject firstBlockReference;
+	public GameObject firstBlockReference;
 
 	private PlayerScript ps;
 	// Use this for initialization

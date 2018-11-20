@@ -118,7 +118,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25da87a99297aab4e900d68667431dc1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  highscore: 1396
+  highscore: 0
+  levelMaker: {fileID: 0}
 --- !u!212 &212488379405565096
 SpriteRenderer:
   m_ObjectHideFlags: 1
