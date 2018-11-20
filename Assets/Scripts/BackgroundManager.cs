@@ -18,6 +18,7 @@ public class BackgroundManager : MonoBehaviour {
 
 	void Start () {
 		currBkg = Instantiate(background[0]);
+		currBkg.transform.SetParent(transform);
 		currBkg.transform.localScale = new Vector3(7,5,1);
 		mainC = Camera.main;
         mapBeggining = mainC.ScreenToWorldPoint(new Vector3(0, 0, 13));
@@ -26,9 +27,14 @@ public class BackgroundManager : MonoBehaviour {
 		currFloor = new GameObject[2];
 		currClouds = new GameObject[2];
 		currFloor[0] = Instantiate(floorDecor[0]); 
+		currFloor[0].transform.SetParent(transform);
 		currFloor[1] = Instantiate(floorDecor[0]);
+		currFloor[1].transform.SetParent(transform);
 		currClouds[0] = Instantiate(clouds[0]);
+		currClouds[0].transform.SetParent(transform);
 		currClouds[1] = Instantiate(clouds[0]);
+		currClouds[1].transform.SetParent(transform);
+
 		startParalax();
 	}
 	

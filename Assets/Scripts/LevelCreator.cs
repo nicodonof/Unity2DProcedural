@@ -76,7 +76,7 @@ public class LevelCreator : MonoBehaviour {
 			
             
 			float holeProb = Random.value;
-			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize && i > 1) {
+			if(holeProb > holeThreshold && i + holeMaxSize + 2 < chunkSize && i > 1) {
 				if (auxChunk[i - 2] == null) {
 					auxChunk[i - 1].GetComponent<SpriteRenderer>().sprite =
 						floor_one.GetComponent<SpriteRenderer>().sprite;

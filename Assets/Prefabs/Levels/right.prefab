@@ -26,7 +26,7 @@ GameObject:
   - component: {fileID: 68999243178660696}
   - component: {fileID: 114854677272858488}
   m_Layer: 0
-  m_Name: tile_33_100
+  m_Name: right
   m_TagString: Floor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
