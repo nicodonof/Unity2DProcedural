@@ -113,6 +113,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &286368089 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1163833789970892, guid: 1d139f737cf5db44b8f97bd7c8b7446f,
+    type: 2}
+  m_PrefabInternal: {fileID: 2027462827}
 --- !u!1001 &551474307
 Prefab:
   m_ObjectHideFlags: 0
@@ -194,6 +199,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114030983414256496, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5,
+        type: 2}
+      propertyPath: levelMaker
+      value: 
+      objectReference: {fileID: 286368089}
     - target: {fileID: 1758354873072138, guid: 10c5e2282fcdd884fac6e0f67a3fb7a5, type: 2}
       propertyPath: m_Name
       value: Carlenz
