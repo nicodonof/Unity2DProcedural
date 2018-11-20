@@ -8,6 +8,7 @@ public class LevelCreator : MonoBehaviour {
 	float widthCube;
 	int chonkIndex;
 	Vector3 mapBeggining;
+	public GameObject enemy;
 	public GameObject block;
 	public GameObject left;
 	public GameObject right;
@@ -20,7 +21,7 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject player;
 
 	GameObject firstBlockReference;
-	
+
 	private PlayerScript ps;
 	// Use this for initialization
 	void Start () {
@@ -38,7 +39,7 @@ public class LevelCreator : MonoBehaviour {
 		CreateChunk(true);
 		// player = GameObject.FindGameObjectWithTag("Player");
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) ){
@@ -51,14 +52,14 @@ public class LevelCreator : MonoBehaviour {
 		if(!start){
 			Dechuncker();
 		}
-		
+
 		//hacer basado en dificultad
 		float rand = Random.value;
 		GameObject[] chunk;
 		if(chonkIndex < 1){
 			chunk = simpleChunk();
 		} else if (rand > 0.5f) {
-			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));			
+			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
 		} else {
 			chunk = platformChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
 		}
@@ -73,15 +74,16 @@ public class LevelCreator : MonoBehaviour {
 		}
 		GameObject[] auxChunk = new GameObject[chunkSize];
 		for (int i = 0; i < chunkSize; i++){
-			
-            
+
+
 			float holeProb = Random.value;
 			if(holeProb > holeThreshold && i + holeMaxSize + 2 < chunkSize && i > 1) {
 				if (auxChunk[i - 2] == null) {
 					auxChunk[i - 1].GetComponent<SpriteRenderer>().sprite =
 						floor_one.GetComponent<SpriteRenderer>().sprite;
 				} else {
-					setBlock(Instantiate(right), i, auxChunk);	
+					GameObject aux = Instantiate(right);
+					setBlock(Instantiate(right), i, auxChunk);
 				}
 				int holeSize = Random.Range(2, holeMaxSize);
 				setBlock(Instantiate(left), i + holeSize,auxChunk);
@@ -96,33 +98,42 @@ public class LevelCreator : MonoBehaviour {
 	}
 
 	void setBlock(GameObject aux , int i, GameObject[] chunk, int offsetY = 0){
-		
-        aux.transform.SetParent(transform);
-        aux.name = "tile_" + i + "_" + chonkIndex;
+
+		aux.transform.SetParent(transform);
+		aux.name = "tile_" + i + "_" + chonkIndex;
 		aux.transform.position = mapBeggining;
-        aux.transform.position = new Vector3(
-            aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube + firstBlockReference.transform.position.x,
-            aux.transform.position.y + widthCube / 2 + offsetY * widthCube,
-            aux.transform.position.z
-        );
+		aux.transform.position = new Vector3(
+				aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube + firstBlockReference.transform.position.x,
+				aux.transform.position.y + widthCube / 2 + offsetY * widthCube,
+				aux.transform.position.z
+		);
 
 		chunk[i] = aux;
 	}
 
-    GameObject[] simpleChunk(){
-        GameObject[] auxChunk = new GameObject[chunkSize];
+	void setEnemy(GameObject aux , int i, GameObject[] chunk, int offsetY = 0){
+		GameObject newEnemy = Instantiate(enemy);
+		enemy.transform.position = new Vector3(
+				aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube + firstBlockReference.transform.position.x,
+				aux.transform.position.y + widthCube / 2 + offsetY * widthCube + 0.5f,
+				aux.transform.position.z
+		);
+	}
+
+  GameObject[] simpleChunk(){
+		GameObject[] auxChunk = new GameObject[chunkSize];
 		bool notInclude = false;
-        for (int i = 0; i < chunkSize; i++){
-            GameObject aux = Instantiate(block);
+		for (int i = 0; i < chunkSize; i++){
+			GameObject aux = Instantiate(block);
 			if(firstBlockReference == null){
 				firstBlockReference = aux;
 				notInclude = true;
 			}
 			setBlock(aux, i,auxChunk);
-        }
+		}
 		if(notInclude)
 			auxChunk[0] = null;
-        return auxChunk;
+		return auxChunk;
 	}
 
 	GameObject[] platformChunk(float platThreshold, int platMaxSize) {
@@ -149,7 +160,7 @@ public class LevelCreator : MonoBehaviour {
 					setBlock(Instantiate(left), i++, auxChunk);
 				}
 			}
-			
+
 			if(puttingPlats){
 				GameObject aux = Instantiate(plat_middle);
 				setBlock(aux, i, auxChunk, platHeight);
@@ -165,7 +176,7 @@ public class LevelCreator : MonoBehaviour {
                 GameObject aux = Instantiate(block);
 				setBlock(aux, i, auxChunk);
             }
-			
+
 		}
 		return auxChunk;
 	}
@@ -180,7 +191,7 @@ public class LevelCreator : MonoBehaviour {
     }
 
 	GameObject[] holedChunk(int size) {
-		
+
 		GameObject[] auxChunk = new GameObject[size];
 		for (int i = 0; i < size; i += 2) {
 			GameObject aux = Instantiate(block);

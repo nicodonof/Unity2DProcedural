@@ -18,7 +18,7 @@ public class PlayerScript : MonoBehaviour {
 		highscore = 0;
 		jumpGas = 5;
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		float x = rigid.velocity.x;
@@ -43,7 +43,7 @@ public class PlayerScript : MonoBehaviour {
 			}
 			// print(rigid.velocity.x / 8);
 			transform.localScale = new Vector3(right?1:-1, transform.localScale.y, transform.localScale.z);
-		} 
+		}
 		if(Input.GetButton("Jump") ){
 			if(Input.GetButtonDown("Jump") && grounded){
 				animator.SetBool("Jump", true);
@@ -53,11 +53,11 @@ public class PlayerScript : MonoBehaviour {
 				if(rigid.velocity.y > 0 && rigid.velocity.y < 10 && jumpGas > 0){
 					rigid.AddForce(new Vector2(0, (jumpGas * 2 )));
 					jumpGas -= 0.02f;
-				} 
+				}
 			}
 		}
 		// print();
-		
+
 
 		animator.SetFloat("Speed", rigid.velocity.x);
 		animator.SetFloat("SpeedY", rigid.velocity.y);
@@ -74,16 +74,22 @@ public class PlayerScript : MonoBehaviour {
 				rigid.velocity.Set(rigid.velocity.x, 0);
 				jumpGas = 5;
 			} // print("Groundedhog");
+		}else if(collision.gameObject.CompareTag("Enemy")){
+			die();
 		}
 	}
 
 	void OnCollisionExit2D(Collision2D collision){
-		
+
 	}
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.name.Equals("DeathTrigger")) {
-			SceneManager.LoadScene(Application.loadedLevel);
+			die();
 		}
+	}
+
+	private void die(){
+		SceneManager.LoadScene(Application.loadedLevel);
 	}
 }
