@@ -12,6 +12,10 @@ public class BackgroundManager : MonoBehaviour {
 	Camera mainC;
 	int temporaryCackinas;
 	// Use this for initialization
+	// private GameObject[] currFloor;
+	private GameObject[] currFloor;
+	private GameObject[] currClouds;
+
 	void Start () {
 		currBkg = Instantiate(background[0]);
 		currBkg.transform.localScale = new Vector3(7,5,1);
@@ -19,17 +23,35 @@ public class BackgroundManager : MonoBehaviour {
         mapBeggining = mainC.ScreenToWorldPoint(new Vector3(0, 0, 13));
         currBkg.transform.position = mapBeggining;
 		temporaryCackinas = 0;
+		currFloor = new GameObject[2];
+		currClouds = new GameObject[2];
+		currFloor[0] = Instantiate(floorDecor[0]); 
+		currFloor[1] = Instantiate(floorDecor[0]);
+		currClouds[0] = Instantiate(clouds[0]);
+		currClouds[1] = Instantiate(clouds[0]);
+		startParalax();
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if(Time.realtimeSinceStartup >= 10 * temporaryCackinas){
-			var aux = Instantiate(floorDecor[0]);
-        	aux.transform.position = mapBeggining + new Vector3(25,2,-1);
-			var aux2 = Instantiate(clouds[0]);
-        	aux2.transform.position = mapBeggining + new Vector3(30,5,-1);
-			
-			temporaryCackinas++;
-		}
+	void FixedUpdate () {
+		if(currFloor[0].transform.position.x < -15){
+            currFloor[0].transform.position = mapBeggining + new Vector3(Random.Range(20f, 30f), 2, -1);
+        }
+		if(currFloor[1].transform.position.x < -15){
+            currFloor[1].transform.position = mapBeggining + new Vector3(Random.Range(20f, 30f), 2, -1);
+        }
+		if(currClouds[0].transform.position.x < -15){
+            currClouds[0].transform.position = mapBeggining + new Vector3(Random.Range(20f, 30f), Random.Range(2f, 10f), -1);
+        }
+		if(currClouds[1].transform.position.x < -15){
+            currClouds[1].transform.position = mapBeggining + new Vector3(Random.Range(20f, 30f), Random.Range(2f, 10f), -1);
+        }
+	}
+
+	void startParalax(){
+        currClouds[0].transform.position = mapBeggining + new Vector3(Random.Range(15f, 20f), Random.Range(2f, 10f), -1);
+        currClouds[1].transform.position = mapBeggining + new Vector3(Random.Range(25f, 35f), Random.Range(2f, 10f), -1);
+        currFloor[0].transform.position = mapBeggining + new Vector3(Random.Range(20f, 23f), 2, -1);
+        currFloor[1].transform.position = mapBeggining + new Vector3(Random.Range(27f, 30f), 2, -1);
 	}
 }

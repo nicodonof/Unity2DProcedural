@@ -23,7 +23,7 @@ public class PlayerScript : MonoBehaviour {
 	void Update () {
 		float x = rigid.velocity.x;
 		float y = rigid.velocity.y;
-		highscore = (int) ((transform.position.x  + 8.67) * 10);
+		highscore = (int) (Time.realtimeSinceStartup);
 		bool right = false;
 		bool left = Input.GetKey("left");
 		if(right || left){
