@@ -53,7 +53,7 @@ public class LevelCreator : MonoBehaviour {
 		GameObject[] chunk;
 		if(chonkIndex < 1){
 			chunk = simpleChunk();
-		}else if (rand > 0.5f) {
+		} else if (rand > 0.5f) {
 			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));			
 		} else {
 			chunk = platformChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
@@ -73,11 +73,11 @@ public class LevelCreator : MonoBehaviour {
             
 			float holeProb = Random.value;
 			if(holeProb > holeThreshold && i + holeMaxSize < chunkSize && i > 0) {
-				GameObject auxLeft = Instantiate(left);
-				GameObject auxRight = Instantiate(right);
+				GameObject auxLeft = Instantiate(right);
+				GameObject auxRight = Instantiate(left);
 				int holeSize = Random.Range(2, holeMaxSize);
-				setBlock(right, i, auxChunk);
-				setBlock(left, i + holeSize,auxChunk);
+				setBlock(auxLeft, i, auxChunk);
+				setBlock(auxRight, i + holeSize,auxChunk);
 				i += holeSize;
 			} else {
 				GameObject aux = Instantiate(block);
@@ -90,7 +90,7 @@ public class LevelCreator : MonoBehaviour {
 
 	void setBlock(GameObject aux , int i, GameObject[] chunk, int offsetY = 0){
 		
-        // aux.transform.SetParent(gameObject.transform);
+        aux.transform.SetParent(transform);
         aux.name = "tile_" + i + "_" + chonkIndex;
 		aux.transform.position = mapBeggining;
         aux.transform.position = new Vector3(

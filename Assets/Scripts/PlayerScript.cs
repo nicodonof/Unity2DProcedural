@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerScript : MonoBehaviour {
 	Rigidbody2D rigid;
@@ -59,11 +60,12 @@ public class PlayerScript : MonoBehaviour {
 		// print(collision.otherCollider.gameObject.name + ": " + (collision.otherCollider.bounds.max.y));
 		// print(collision.collider.gameObject.name + "- " + (coll.bounds.min.y));
 		// print(coll.bounds.min.y + " >= " + collision.otherCollider.bounds.max.y);
-		if (collision.gameObject.tag == "Floor" && !grounded){ //&& collision.otherCollider.bounds.min.y >= collision.collider.bounds.max.y){
-				animator.SetBool("Jump", false);
+		if (collision.gameObject.CompareTag("Floor") && !grounded){ //&& collision.otherCollider.bounds.min.y >= collision.collider.bounds.max.y){
+			animator.SetBool("Jump", false);
+			if (collision.otherCollider.bounds.min.y >= collision.collider.bounds.max.y) {
 				grounded = true;
-				rigid.velocity.Set(rigid.velocity.x,0);
-				// print("Groundedhog");
+				rigid.velocity.Set(rigid.velocity.x, 0);
+			} // print("Groundedhog");
 		}
 	}
 
@@ -73,7 +75,7 @@ public class PlayerScript : MonoBehaviour {
 
 	private void OnTriggerEnter2D(Collider2D other) {
 		if (other.gameObject.name.Equals("DeathTrigger")) {
-			Application.LoadLevel(Application.loadedLevel);
+			SceneManager.LoadScene(Application.loadedLevel);
 		}
 	}
 }
