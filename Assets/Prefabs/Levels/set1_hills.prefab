@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212299502450831164}
   m_Layer: 0
   m_Name: set1_hills
-  m_TagString: Untagged
+  m_TagString: Decor
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -9,7 +9,7 @@ public class PlayerScript : MonoBehaviour {
 	bool grounded;
 	float jumpGas;
 	public GameObject levelMaker;
-	GameObject reference;
+	LevelCreator reference;
 	// Use this for initialization
 	void Start () {
 		rigid = GetComponent<Rigidbody2D>();
@@ -19,16 +19,17 @@ public class PlayerScript : MonoBehaviour {
 		// animator.recorderMode = AnimatorRecorderMode.Playback;
 		highscore = 0;
 		jumpGas = 5;
-		reference = levelMaker.GetComponent<LevelCreator>().firstBlockReference;
+		reference = levelMaker.GetComponent<LevelCreator>();
 	}
 
 	// Update is called once per frame
 	void Update () {
-		print(highscore);
+		// print(highscore);
 		float x = rigid.velocity.x;
 		float y = rigid.velocity.y;
-		highscore = (int) Mathf.Round(Mathf.Abs(reference.transform.position.x));
+		highscore = (int) Mathf.Round(Mathf.Abs(reference.firstBlockReference.transform.position.x));
 		bool right = false;
+		
 		bool left = Input.GetKey("left");
 		if(right || left){
 			if(grounded){

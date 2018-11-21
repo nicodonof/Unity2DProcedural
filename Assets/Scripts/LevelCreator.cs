@@ -19,10 +19,10 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject plat_one;
 	public Queue<GameObject[]> chunks;
 	public GameObject player;
-
 	public GameObject firstBlockReference;
 
 	private PlayerScript ps;
+	public bool fake = false;
 	// Use this for initialization
 	void Start () {
 //		left = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Levels/left.prefab");
@@ -42,8 +42,10 @@ public class LevelCreator : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) ){
+		if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) && !fake){
 			CreateChunk(false);
+		} else if(firstBlockReference.transform.position.x < -((chonkIndex - chunkSize * 2) * widthCube)) {
+			CreateChunk(true);
 		}
 	}
 
@@ -56,7 +58,7 @@ public class LevelCreator : MonoBehaviour {
 		//hacer basado en dificultad
 		float rand = Random.value;
 		GameObject[] chunk;
-		if(chonkIndex < 1){
+		if(chonkIndex < 1 || start){
 			chunk = simpleChunk();
 		} else if (rand > 0.5f) {
 			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
