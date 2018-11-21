@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
+﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class LevelCreator : MonoBehaviour {
@@ -20,7 +19,6 @@ public class LevelCreator : MonoBehaviour {
 	public Queue<GameObject[]> chunks;
 	public GameObject player;
 	public GameObject firstBlockReference;
-
 	private PlayerScript ps;
 	public bool fake = false;
 	// Use this for initialization
@@ -56,47 +54,27 @@ public class LevelCreator : MonoBehaviour {
 		}
 
 		//hacer basado en dificultad
-		float rand = Random.value;
-		GameObject[] chunk;
-		if(chonkIndex < 1 || start){
-			chunk = simpleChunk();
-		} else if (rand > 0.5f) {
-			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
-		} else {
-			chunk = platformChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
-		}
-
-		chunks.Enqueue(chunk);
-		chonkIndex += chunk.Length;
-	}
-
-	GameObject[] floorChunk(float holeThreshold, int holeMaxSize) {
-		if (holeMaxSize < 1) {
-			holeMaxSize = 1;
-		}
-		GameObject[] auxChunk = new GameObject[chunkSize];
-		for (int i = 0; i < chunkSize; i++){
-
-
-			float holeProb = Random.value;
-			if(holeProb > holeThreshold && i + holeMaxSize + 2 < chunkSize && i > 1) {
-				if (auxChunk[i - 2] == null) {
-					auxChunk[i - 1].GetComponent<SpriteRenderer>().sprite =
-						floor_one.GetComponent<SpriteRenderer>().sprite;
-				} else {
-					GameObject aux = Instantiate(right);
-					setBlock(Instantiate(right), i, auxChunk);
-				}
-				int holeSize = Random.Range(2, holeMaxSize);
-				setBlock(Instantiate(left), i + holeSize,auxChunk);
-				i += holeSize;
+		float rand;
+		GameObject[] chunk = simpleChunk();
+//		if(chonkIndex < 1){
+//			chunk = simpleChunk();
+//		} else if (rand > 0.5f) {
+//			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));			
+//		} else {
+//			chunk = platformChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
+//		}
+		for (int i = 1; i < chunk.Length;) {
+			rand = Random.value;
+			if (0.3f < rand && rand < 0.6f && i + 4 < chunk.Length) {
+				i = addHole(i, 3, chunk);
+			} else if (0.6f < rand && i + 8 < chunk.Length) {
+				i = addPlatform(i, 4, 3, chunk);
 			} else {
-				GameObject aux = Instantiate(block);
-				setBlock(aux,i,auxChunk);
+				i++;
 			}
 		}
-
-		return auxChunk;
+		chunks.Enqueue(chunk);
+		chonkIndex += chunk.Length;
 	}
 
 	void setBlock(GameObject aux , int i, GameObject[] chunk, int offsetY = 0){
@@ -138,49 +116,56 @@ public class LevelCreator : MonoBehaviour {
 		return auxChunk;
 	}
 
-	GameObject[] platformChunk(float platThreshold, int platMaxSize) {
-		int platSize = 0;
-		if (platMaxSize < 1) {
-			platMaxSize = 1;
-		}
-		GameObject[] auxChunk = new GameObject[chunkSize];
-		bool puttingPlats = false;
-		int platHeight = 0;
-		for (int i = 0; i < chunkSize; i++) {
-			float holeProb = Random.value;
-			if(!puttingPlats && holeProb > platThreshold && i + platMaxSize + 4 /* para q meta bien los bordes del piso */ < chunkSize && i > 0) {
-				platSize = Random.Range(1, platMaxSize);
-				auxChunk[i - 1].GetComponent<SpriteRenderer>().sprite = right.GetComponent<SpriteRenderer>().sprite;
-				puttingPlats = true;
-				platHeight = Random.Range(4, 8);
-				i++;
-				setBlock(Instantiate(platSize == 1? plat_one : plat_left), i++, auxChunk, platHeight);
-				platSize--;
-				if (platSize == 0) {
-					puttingPlats = false;
-					i++;
-					setBlock(Instantiate(left), i++, auxChunk);
-				}
+
+	int addHole(int i, int holeSize, GameObject[] chunk) {
+		if (chunk[i - 1] != null) {
+			Destroy(chunk[i-1]);
+			chunk[i - 1] = null;
+			if (i > 1) {
+				setBlock(Instantiate(chunk[i-2] == null ? floor_one: right), i - 1, chunk);
 			}
-
-			if(puttingPlats){
-				GameObject aux = Instantiate(plat_middle);
-				setBlock(aux, i, auxChunk, platHeight);
-				if(platSize == 1){
-					setBlock(Instantiate(plat_right), ++i, auxChunk, platHeight);
-					puttingPlats = false;
-					i++;
-					setBlock(Instantiate(left), ++i, auxChunk);
-				}
-
-				platSize--;
-			} else {
-                GameObject aux = Instantiate(block);
-				setBlock(aux, i, auxChunk);
-            }
-
 		}
-		return auxChunk;
+		for (; holeSize > 0; i++, holeSize--) {
+			Destroy(chunk[i]);
+			chunk[i] = null;
+		}
+		Destroy(chunk[i]);
+		chunk[i] = null;
+		setBlock(Instantiate(left), i, chunk);
+		return i;
+	}
+	
+	int addPlatform(int i, int platSize, int platHeight, GameObject[] chunk) {
+		if (chunk[i - 1] != null) {
+			Destroy(chunk[i-1]);
+			chunk[i - 1] = null;
+			if (i > 1) {
+				setBlock(Instantiate(chunk[i-2] == null ? floor_one: right), i - 1, chunk);
+			}
+		}
+		Destroy(chunk[i]);
+		chunk[i++] = null;
+		Destroy(chunk[i]);
+		chunk[i] = null;
+		setBlock(Instantiate(platSize == 1? plat_one : plat_left), i++, chunk, platHeight);
+		platSize--;
+		
+		for (; platSize > 0; i++) {
+			Destroy(chunk[i]);
+			if(platSize == 1){
+				setBlock(Instantiate(plat_right), i, chunk, platHeight);
+			} else {
+				setBlock(Instantiate(plat_middle), i, chunk, platHeight);				
+			}
+			platSize--;
+		}
+		
+		Destroy(chunk[i]);
+		chunk[i++] = null;
+		Destroy(chunk[i]);
+		chunk[i] = null;
+		setBlock(Instantiate(left), i, chunk);
+		return i;
 	}
 
 
