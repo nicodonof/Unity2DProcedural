@@ -20,6 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4652479795153948}
   - component: {fileID: 212299502450831164}
+  - component: {fileID: 114588082054172304}
   m_Layer: 0
   m_Name: set1_hills
   m_TagString: Decor
@@ -40,6 +41,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114588082054172304
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1789461369512204}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c13f5c76dcf8b24f96130ede6a09026, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0.0325
 --- !u!212 &212299502450831164
 SpriteRenderer:
   m_ObjectHideFlags: 1
