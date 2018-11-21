@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LevelCreator : MonoBehaviour {
-	public int chunkSize = 50;
+	public int chunkSize = 100;
 	float widthCube;
 	int chonkIndex;
 	Vector3 mapBeggining;
@@ -21,55 +23,57 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject firstBlockReference;
 	private PlayerScript ps;
 	public bool fake = false;
+
+	public int seed = 0;
 	// Use this for initialization
+	
 	void Start () {
-//		left = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Levels/left.prefab");
-		// float widthGrid = Mathf.Round(Camera.main.pixelWidth/grid_row);
+		if (seed != 0) {
+			Random.InitState(seed);
+		} else {
+			seed = Random.Range(0, Int32.MaxValue);
+			Random.InitState(seed);
+		}
 		chonkIndex = 0;
 		mapBeggining = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 11));
-		// block.transform.localScale = new Vector3(0.5f,0.5f,1);
-		// widthCube = block.GetComponent<BoxCollider2D>().size.x / 2; //
 		widthCube = 1.27f / 2;
 		chunks = new Queue<GameObject[]>();
 		ps = player.GetComponent<PlayerScript>();
-		CreateChunk(true);
-		CreateChunk(true);
-		CreateChunk(true);
-		// player = GameObject.FindGameObjectWithTag("Player");
+		CreateChunk(true, 0, 0, 0, 0);
+		CreateChunk(true, 0, 0, 0, 0);
+		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
 	}
 
 	// Update is called once per frame
 	void Update () {
 		if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) && !fake){
-			CreateChunk(false);
+			CreateChunk(false,Mathf.Min(chonkIndex/100f * 0.05f, 0.5f),Mathf.Min(chonkIndex/100f * 0.05f),Mathf.Min(chonkIndex/100f * 0.02f, 0.3f), Mathf.Min(chonkIndex/100, 10));
 		} else if(firstBlockReference.transform.position.x < -((chonkIndex - chunkSize * 2) * widthCube)) {
-			CreateChunk(true);
+			CreateChunk(true,0,0,0,0);
 		}
 	}
 
-	void CreateChunk(bool start){
+	void CreateChunk(bool start, float platFreq, float holeFreq, float mobFreq, int size){
 		//Dechunk last chunk
 		if(!start){
 			Dechuncker();
 		}
 
-		//hacer basado en dificultad
 		float rand;
+		int randSize;
+		float mobRandom;
 		GameObject[] chunk = simpleChunk();
-//		if(chonkIndex < 1){
-//			chunk = simpleChunk();
-//		} else if (rand > 0.5f) {
-//			chunk = floorChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));			
-//		} else {
-//			chunk = platformChunk(0.9f, 1 + Mathf.RoundToInt(Mathf.Log(ps.highscore, 8) * 2));
-//		}
 		for (int i = 1; i < chunk.Length;) {
 			rand = Random.value;
-			if (0.3f < rand && rand < 0.6f && i + 4 < chunk.Length) {
-				i = addHole(i, 3, chunk);
-			} else if (0.6f < rand && i + 8 < chunk.Length) {
-				i = addPlatform(i, 4, 3, chunk);
+			mobRandom = Random.value;
+			randSize = Random.Range(1, size + 1);
+			if (rand < holeFreq && i + randSize + 1 < chunk.Length) {
+				i = addHole(i, randSize, chunk);
+			} else if (rand > holeFreq && rand < holeFreq + platFreq && i + (10-randSize) + 4 < chunk.Length) {
+				i = addPlatform(i, 10 - randSize, 3, chunk);
 			} else {
+				if(mobRandom < mobFreq)
+					setEnemy(i, chunk);
 				i++;
 			}
 		}
@@ -91,16 +95,14 @@ public class LevelCreator : MonoBehaviour {
 		chunk[i] = aux;
 	}
 
-	void setEnemy(GameObject aux , int i, GameObject[] chunk, int offsetY = 0){
+	void setEnemy(int i, GameObject[] chunk){
 		GameObject newEnemy = Instantiate(enemy);
-		enemy.transform.position = new Vector3(
-				aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube + firstBlockReference.transform.position.x,
-				aux.transform.position.y + widthCube / 2 + offsetY * widthCube + 0.5f,
-				aux.transform.position.z
-		);
+		newEnemy.transform.SetParent(transform);
+		newEnemy.name = "enemy_" + i + "_" + chonkIndex;
+		newEnemy.transform.position = new Vector3(chunk[i].transform.position.x, chunk[i].transform.position.y + 0.5f, chunk[i].transform.position.z);
 	}
 
-  GameObject[] simpleChunk(){
+	GameObject[] simpleChunk(){
 		GameObject[] auxChunk = new GameObject[chunkSize];
 		bool notInclude = false;
 		for (int i = 0; i < chunkSize; i++){
@@ -119,34 +121,29 @@ public class LevelCreator : MonoBehaviour {
 
 	int addHole(int i, int holeSize, GameObject[] chunk) {
 		if (chunk[i - 1] != null) {
-			Destroy(chunk[i-1]);
-			chunk[i - 1] = null;
+			removeChunk(chunk, i-1);
 			if (i > 1) {
 				setBlock(Instantiate(chunk[i-2] == null ? floor_one: right), i - 1, chunk);
 			}
 		}
 		for (; holeSize > 0; i++, holeSize--) {
-			Destroy(chunk[i]);
-			chunk[i] = null;
+			removeChunk(chunk, i);
 		}
-		Destroy(chunk[i]);
-		chunk[i] = null;
+
+		removeChunk(chunk, i);
 		setBlock(Instantiate(left), i, chunk);
 		return i;
 	}
 	
 	int addPlatform(int i, int platSize, int platHeight, GameObject[] chunk) {
 		if (chunk[i - 1] != null) {
-			Destroy(chunk[i-1]);
-			chunk[i - 1] = null;
+			removeChunk(chunk, i-1);
 			if (i > 1) {
 				setBlock(Instantiate(chunk[i-2] == null ? floor_one: right), i - 1, chunk);
 			}
 		}
-		Destroy(chunk[i]);
-		chunk[i++] = null;
-		Destroy(chunk[i]);
-		chunk[i] = null;
+		removeChunk(chunk, i++);
+		removeChunk(chunk, i);
 		setBlock(Instantiate(platSize == 1? plat_one : plat_left), i++, chunk, platHeight);
 		platSize--;
 		
@@ -160,14 +157,16 @@ public class LevelCreator : MonoBehaviour {
 			platSize--;
 		}
 		
-		Destroy(chunk[i]);
-		chunk[i++] = null;
-		Destroy(chunk[i]);
-		chunk[i] = null;
+		removeChunk(chunk, i++);
+		removeChunk(chunk, i);
 		setBlock(Instantiate(left), i, chunk);
 		return i;
 	}
 
+	void removeChunk(GameObject[] chunk, int i) {
+		Destroy(chunk[i]);
+		chunk[i] = null;
+	}
 
     void Dechuncker(){
         GameObject[] toDechunk = chunks.Dequeue();
@@ -176,25 +175,5 @@ public class LevelCreator : MonoBehaviour {
             	Destroy(toDechunk[i]);
         }
     }
-
-	GameObject[] holedChunk(int size) {
-
-		GameObject[] auxChunk = new GameObject[size];
-		for (int i = 0; i < size; i += 2) {
-			GameObject aux = Instantiate(block);
-			aux.name = "tile" + i;
-			aux.transform.SetParent(gameObject.transform);
-
-			aux.transform.position = mapBeggining;
-			aux.transform.position = new Vector3(
-				aux.transform.position.x + widthCube / 2 + widthCube * i + chonkIndex * widthCube,
-				aux.transform.position.y + widthCube / 2,
-				aux.transform.position.z
-			);
-			auxChunk[i] = aux;
-		}
-		return auxChunk;
-	}
-
 }
 
