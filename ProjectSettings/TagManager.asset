@@ -7,6 +7,7 @@ TagManager:
   - Floor
   - Enemy
   - Decor
+  - HighscoreText
   layers:
   - Default
   - TransparentFX

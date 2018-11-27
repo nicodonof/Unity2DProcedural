@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class PlayerScript : MonoBehaviour {
 	Rigidbody2D rigid;
@@ -10,6 +11,7 @@ public class PlayerScript : MonoBehaviour {
 	float jumpGas;
 	public GameObject levelMaker;
 	LevelCreator reference;
+	GameObject highscoreText;
 	// Use this for initialization
 	void Start () {
 		rigid = GetComponent<Rigidbody2D>();
@@ -18,8 +20,10 @@ public class PlayerScript : MonoBehaviour {
 		grounded = true;
 		// animator.recorderMode = AnimatorRecorderMode.Playback;
 		highscore = 0;
-		jumpGas = 5;
+		jumpGas = 4;
 		reference = levelMaker.GetComponent<LevelCreator>();
+		highscoreText = GameObject.FindGameObjectWithTag("HighscoreText");
+
 	}
 
 	// Update is called once per frame
@@ -28,6 +32,7 @@ public class PlayerScript : MonoBehaviour {
 		float x = rigid.velocity.x;
 		float y = rigid.velocity.y;
 		highscore = (int) Mathf.Round(Mathf.Abs(reference.firstBlockReference.transform.position.x));
+		highscoreText.GetComponent<TextMeshProUGUI>().SetText(highscore.ToString());
 		bool right = false;
 		
 		bool left = Input.GetKey("left");
@@ -56,7 +61,7 @@ public class PlayerScript : MonoBehaviour {
 				rigid.AddForce(new Vector2(0,400));
 			} else {
 				if(rigid.velocity.y > 0 && rigid.velocity.y < 10 && jumpGas > 0){
-					rigid.AddForce(new Vector2(0, (jumpGas * 2 )));
+					rigid.AddForce(new Vector2(0, (jumpGas * 3 )));
 					jumpGas -= 0.02f;
 				}
 			}
@@ -77,7 +82,7 @@ public class PlayerScript : MonoBehaviour {
 			if (collision.otherCollider.bounds.min.y >= collision.collider.bounds.max.y) {
 				grounded = true;
 				rigid.velocity.Set(rigid.velocity.x, 0);
-				jumpGas = 5;
+				jumpGas = 4;
 			} // print("Groundedhog");
 		}else if(collision.gameObject.CompareTag("Enemy")){
 			die();
