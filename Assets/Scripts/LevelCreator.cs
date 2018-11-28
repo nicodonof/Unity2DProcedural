@@ -51,7 +51,7 @@ public class LevelCreator : MonoBehaviour {
 //		print(chunks);
 		ps = player.GetComponent<PlayerScript>();
 		CreateChunk(true, 0, 0, 0, 0);
-		CreateChunk(true, 0, 0, 0, 0);
+		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
 		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
 	}
 
