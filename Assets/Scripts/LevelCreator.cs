@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[ExecuteInEditMode]
 public class LevelCreator : MonoBehaviour {
-	public int chunkSize = 100;
+	public const int chunkSize = 100;
 	float widthCube;
 	int chonkIndex;
 	Vector3 mapBeggining;
@@ -22,12 +24,20 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject player;
 	public GameObject firstBlockReference;
 	private PlayerScript ps;
-	public bool fake = false;
+	public bool fake;
 
-	public int seed = 0;
+	public int seed;
 	// Use this for initialization
-	
+	private void Awake() {
+		chonkIndex = 0;
+		mapBeggining = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 11));
+		widthCube = 1.27f / 2;
+		chunks = new Queue<GameObject[]>();
+//		print(chunks);
+	}
+
 	void Start () {
+		DeleteAll();
 		if (seed != 0) {
 			Random.InitState(seed);
 		} else {
@@ -38,18 +48,39 @@ public class LevelCreator : MonoBehaviour {
 		mapBeggining = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 11));
 		widthCube = 1.27f / 2;
 		chunks = new Queue<GameObject[]>();
+//		print(chunks);
 		ps = player.GetComponent<PlayerScript>();
 		CreateChunk(true, 0, 0, 0, 0);
 		CreateChunk(true, 0, 0, 0, 0);
 		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
 	}
 
+	public void EditorCreateChunks(int dif, int maxSize, int chNumber, int edSeed) {
+		chunks = new Queue<GameObject[]>();
+		Random.InitState(edSeed);
+		while (chNumber > 0) {
+			CreateChunk(true,Mathf.Min((dif + chonkIndex/100f) * 0.05f, 0.5f), Mathf.Min((dif + chonkIndex/100f) * 0.05f, 0.5f), 
+				Mathf.Min((dif + chonkIndex/100f) * 0.02f, 0.3f), Mathf.Min(maxSize, 10));
+			chNumber--;
+		}
+	}
+
+	public void DeleteAll() {
+		List<Transform> tempList = transform.Cast<Transform>().ToList();
+		foreach (Transform t in tempList) {
+			DestroyImmediate(t.gameObject);
+		}
+		chonkIndex = 0;
+	}
+	
 	// Update is called once per frame
 	void Update () {
-		if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) && !fake){
-			CreateChunk(false,Mathf.Min(chonkIndex/100f * 0.05f, 0.5f),Mathf.Min(chonkIndex/100f * 0.05f),Mathf.Min(chonkIndex/100f * 0.02f, 0.3f), Mathf.Min(chonkIndex/100, 10));
-		} else if(firstBlockReference.transform.position.x < -((chonkIndex - chunkSize * 2) * widthCube)) {
-			CreateChunk(true,0,0,0,0);
+		if (Application.isPlaying) {
+			if(firstBlockReference.transform.position.x < - ((chonkIndex - chunkSize * 2)  * widthCube) && !fake){
+				CreateChunk(false,Mathf.Min(chonkIndex/100f * 0.03f, 0.3f),Mathf.Min(chonkIndex/100f * 0.03f, 0.3f),Mathf.Min(chonkIndex/100f * 0.02f, 0.3f), Mathf.Min(chonkIndex/100, 10));
+			} else if(firstBlockReference.transform.position.x < -((chonkIndex - chunkSize * 2) * widthCube)) {
+				CreateChunk(true,0,0,0,0);
+			}
 		}
 	}
 
@@ -70,14 +101,17 @@ public class LevelCreator : MonoBehaviour {
 			if (rand < holeFreq && i + randSize + 1 < chunk.Length) {
 				i = addHole(i, randSize, chunk);
 			} else if (rand > holeFreq && rand < holeFreq + platFreq && i + (10-randSize) + 4 < chunk.Length) {
-				i = addPlatform(i, 10 - randSize, 3, chunk);
+				i = addPlatform(i, 10 - randSize, 3, chunk, mobFreq);
 			} else {
 				if(mobRandom < mobFreq)
 					setEnemy(i, chunk);
 				i++;
 			}
 		}
-		chunks.Enqueue(chunk);
+		if (Application.isPlaying) {
+			chunks.Enqueue(chunk);
+		}
+
 		chonkIndex += chunk.Length;
 	}
 
@@ -99,7 +133,7 @@ public class LevelCreator : MonoBehaviour {
 		GameObject newEnemy = Instantiate(enemy);
 		newEnemy.transform.SetParent(transform);
 		newEnemy.name = "enemy_" + i + "_" + chonkIndex;
-		newEnemy.transform.position = new Vector3(chunk[i].transform.position.x, chunk[i].transform.position.y + 0.5f, chunk[i].transform.position.z);
+		newEnemy.transform.position = new Vector3(chunk[i].transform.position.x, chunk[i].transform.position.y + 0.75f, chunk[i].transform.position.z);
 	}
 
 	GameObject[] simpleChunk(){
@@ -135,7 +169,7 @@ public class LevelCreator : MonoBehaviour {
 		return i;
 	}
 	
-	int addPlatform(int i, int platSize, int platHeight, GameObject[] chunk) {
+	int addPlatform(int i, int platSize, int platHeight, GameObject[] chunk, float mobFreq) {
 		if (chunk[i - 1] != null) {
 			removeChunk(chunk, i-1);
 			if (i > 1) {
@@ -148,11 +182,16 @@ public class LevelCreator : MonoBehaviour {
 		platSize--;
 		
 		for (; platSize > 0; i++) {
-			Destroy(chunk[i]);
+			DestroyImmediate(chunk[i]);
 			if(platSize == 1){
 				setBlock(Instantiate(plat_right), i, chunk, platHeight);
 			} else {
-				setBlock(Instantiate(plat_middle), i, chunk, platHeight);				
+				float mobRand = Random.value;
+				setBlock(Instantiate(plat_middle), i, chunk, platHeight);
+				if (mobRand < mobFreq) {
+					setEnemy(i, chunk);
+				}
+				
 			}
 			platSize--;
 		}
@@ -164,7 +203,7 @@ public class LevelCreator : MonoBehaviour {
 	}
 
 	void removeChunk(GameObject[] chunk, int i) {
-		Destroy(chunk[i]);
+		DestroyImmediate(chunk[i]); // immediate for editor to work
 		chunk[i] = null;
 	}
 
@@ -172,7 +211,7 @@ public class LevelCreator : MonoBehaviour {
         GameObject[] toDechunk = chunks.Dequeue();
         for (int i = 0; i < toDechunk.Length; i++){
 			if(toDechunk[i] != null)
-            	Destroy(toDechunk[i]);
+            	DestroyImmediate(toDechunk[i]);
         }
     }
 }
