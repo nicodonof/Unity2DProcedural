@@ -32,7 +32,8 @@ public class PlayerScript : MonoBehaviour {
 		float x = rigid.velocity.x;
 		float y = rigid.velocity.y;
 		highscore = (int) Mathf.Round(Mathf.Abs(reference.firstBlockReference.transform.position.x));
-		highscoreText.GetComponent<TextMeshProUGUI>().SetText(highscore.ToString());
+		if(highscoreText != null)
+			highscoreText.GetComponent<TextMeshProUGUI>().SetText(highscore.ToString());
 		bool right = false;
 		
 		bool left = Input.GetKey("left");
