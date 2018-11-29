@@ -9,9 +9,7 @@ public class BackgroundManager : MonoBehaviour {
 	public GameObject[] clouds;
 	GameObject currBkg;
     Vector3 mapBeggining;
-	Camera mainC;
-	int temporaryCackinas;
-	// Use this for initialization
+	Camera mainC;	// Use this for initialization
 	// private GameObject[] currFloor;
 	private GameObject[] currFloor;
 	private GameObject[] currClouds;
@@ -27,7 +25,6 @@ public class BackgroundManager : MonoBehaviour {
 		mainC = Camera.main;
         mapBeggining = mainC.ScreenToWorldPoint(new Vector3(0, 0, 13));
         currBkg.transform.position = mapBeggining;
-		temporaryCackinas = 0;
 		currFloor = new GameObject[2];
 		currClouds = new GameObject[2];
 		currFloor[0] = Instantiate(floorDecor[levelIndex]);
