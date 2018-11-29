@@ -205,7 +205,12 @@ public class LevelCreator : MonoBehaviour {
 	}
 
 	void removeChunk(GameObject[] chunk, int i) {
-		DestroyImmediate(chunk[i]); // immediate for editor to work
+		if (Application.isPlaying) {
+			Destroy(chunk[i]);
+		} else {
+			DestroyImmediate(chunk[i]); // immediate for editor to work
+		}
+
 		chunk[i] = null;
 	}
 
@@ -213,7 +218,12 @@ public class LevelCreator : MonoBehaviour {
         GameObject[] toDechunk = chunks.Dequeue();
         for (int i = 0; i < toDechunk.Length; i++){
 			if(toDechunk[i] != null)
-            	DestroyImmediate(toDechunk[i]);
+				if (Application.isPlaying) {
+					Destroy((toDechunk[i]));
+				}
+				else {
+					DestroyImmediate(toDechunk[i]);
+				}
         }
     }
 }
