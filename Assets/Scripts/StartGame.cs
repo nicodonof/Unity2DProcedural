@@ -10,7 +10,7 @@ public class StartGame : MonoBehaviour {
 	void Start () {
 		// player = GameObject.FindGameObjectWithTag("Player");
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if(Input.anyKeyDown){
@@ -22,8 +22,8 @@ public class StartGame : MonoBehaviour {
 				}
 			}
 		}
-		// print(Camera.main.transform.position.x);
-		if(Camera.main.transform.position.x < -20)
-            SceneManager.LoadScene("NicoScene");
+		if(Camera.main.transform.position.x < -20.0){
+			SceneManager.LoadScene("GameScene");
+		}
 	}
 }

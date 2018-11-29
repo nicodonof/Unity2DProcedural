@@ -35,7 +35,7 @@ public class PlayerScript : MonoBehaviour {
 		if(highscoreText != null)
 			highscoreText.GetComponent<TextMeshProUGUI>().SetText(highscore.ToString());
 		bool right = false;
-		
+
 		bool left = Input.GetKey("left");
 		if(right || left){
 			if(grounded){
@@ -101,6 +101,6 @@ public class PlayerScript : MonoBehaviour {
 	}
 
 	private void die(){
-		SceneManager.LoadScene(Application.loadedLevel);
+		GameObject.Find("LevelManager").GetComponent<PauseScript>().ShowGameEndedPanel(highscoreText.GetComponent<TextMeshProUGUI>().text);
 	}
 }
