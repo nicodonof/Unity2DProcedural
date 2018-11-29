@@ -24,7 +24,7 @@ public class LevelCreator : MonoBehaviour {
 	public GameObject player;
 	public GameObject firstBlockReference;
 	private PlayerScript ps;
-	public bool fake;
+	public bool fake = false;
 
 	public int seed;
 	// Use this for initialization
@@ -51,17 +51,19 @@ public class LevelCreator : MonoBehaviour {
 //		print(chunks);
 		ps = player.GetComponent<PlayerScript>();
 		CreateChunk(true, 0, 0, 0, 0);
-		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
-		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
+//		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
+//		CreateChunk(true, 0.05f, 0.05f, 0f, 3);
 	}
 
 	public void EditorCreateChunks(int dif, int maxSize, int chNumber, int edSeed) {
-		chunks = new Queue<GameObject[]>();
-		Random.InitState(edSeed);
-		while (chNumber > 0) {
-			CreateChunk(true,Mathf.Min((dif + chonkIndex/100f) * 0.05f, 0.5f), Mathf.Min((dif + chonkIndex/100f) * 0.05f, 0.5f), 
-				Mathf.Min((dif + chonkIndex/100f) * 0.02f, 0.3f), Mathf.Min(maxSize, 10));
-			chNumber--;
+		if (!Application.isPlaying) {
+			chunks = new Queue<GameObject[]>();
+			Random.InitState(edSeed);
+			while (chNumber > 0) {
+				CreateChunk(true,Mathf.Min((dif + chonkIndex/100f) * 0.05f, 0.5f), Mathf.Min((dif + chonkIndex/100f) * 0.05f, 0.5f), 
+					Mathf.Min((dif + chonkIndex/100f) * 0.02f, 0.3f), Mathf.Min(maxSize, 10));
+				chNumber--;
+			}
 		}
 	}
 
@@ -86,7 +88,7 @@ public class LevelCreator : MonoBehaviour {
 
 	void CreateChunk(bool start, float platFreq, float holeFreq, float mobFreq, int size){
 		//Dechunk last chunk
-		if(!start){
+		if(!start && chonkIndex > 3 * chunkSize){
 			Dechuncker();
 		}
 
