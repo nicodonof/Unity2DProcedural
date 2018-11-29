@@ -66,7 +66,6 @@ public class PlayerScript : MonoBehaviour {
 				rigid.AddForce(new Vector2(0,300));
 			} else {
 				if(rigid.velocity.y > 0 && rigid.velocity.y < 10 && jumpGas > 0){
-					jumpSound.Play();
 					rigid.AddForce(new Vector2(0, (jumpGas * 5 )));
 					jumpGas -= 0.02f;
 				}
