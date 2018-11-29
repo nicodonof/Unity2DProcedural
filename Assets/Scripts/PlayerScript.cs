@@ -10,6 +10,9 @@ public class PlayerScript : MonoBehaviour {
 	bool grounded;
 	float jumpGas;
 	public GameObject levelMaker;
+
+	public AudioSource fallSound;
+	public AudioSource jumpSound;
 	LevelCreator reference;
 	GameObject highscoreText;
 	// Use this for initialization
@@ -57,11 +60,13 @@ public class PlayerScript : MonoBehaviour {
 		}
 		if(Input.GetButton("Jump") ){
 			if(Input.GetButtonDown("Jump") && grounded){
+				jumpSound.Play();
 				animator.SetBool("Jump", true);
 				grounded = false;
 				rigid.AddForce(new Vector2(0,300));
 			} else {
 				if(rigid.velocity.y > 0 && rigid.velocity.y < 10 && jumpGas > 0){
+					jumpSound.Play();
 					rigid.AddForce(new Vector2(0, (jumpGas * 5 )));
 					jumpGas -= 0.02f;
 				}
@@ -101,6 +106,7 @@ public class PlayerScript : MonoBehaviour {
 	}
 
 	private void die(){
+		fallSound.Play();
 		GameObject.Find("LevelManager").GetComponent<PauseScript>().ShowGameEndedPanel(highscoreText.GetComponent<TextMeshProUGUI>().text);
 	}
 }
